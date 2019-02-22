@@ -20,10 +20,8 @@ import javax.inject.Inject;
 @LoadDataBeforeShow
 public class DocumentBrowse extends StandardLookup<Document> {
 
-
     @Inject
     protected GroupTable<Document> documentsTable;
-
 
     @Inject
     protected UiComponents uiComponents;
