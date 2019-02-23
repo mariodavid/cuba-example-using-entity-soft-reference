@@ -40,7 +40,7 @@ cuba {
 
 dependencies {
     appComponent("com.haulmont.cuba:cuba-global:$cubaVersion")
-    appComponent("de.diedavids.cuba.entitysoftreference:entity-soft-reference-global:0.5.0-SNAPSHOT")
+    appComponent("de.diedavids.cuba.entitysoftreference:entity-soft-reference-global:0.5.0")
 }
 
 def hsql = 'org.hsqldb:hsqldb:2.2.9'
