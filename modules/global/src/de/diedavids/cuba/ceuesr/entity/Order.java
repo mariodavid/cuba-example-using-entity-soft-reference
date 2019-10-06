@@ -11,7 +11,8 @@ import java.util.UUID;
 @NamePattern("%s|orderDate")
 @Table(name = "CEUESR_ORDER")
 @Entity(name = "ceuesr_Order")
-public class Order extends StandardEntity{
+public class Order extends StandardEntity implements Documentable<UUID> {
+
     @Temporal(TemporalType.DATE)
     @Column(name = "ORDER_DATE")
     protected Date orderDate;
