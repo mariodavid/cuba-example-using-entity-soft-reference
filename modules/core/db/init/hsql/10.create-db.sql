@@ -43,6 +43,7 @@ create table CEUESR_DOCUMENT (
     --
     NAME varchar(255),
     REFERS_TO varchar(255),
+    DOCUMENTS varchar(255),
     FILE_ID varchar(36),
     --
     primary key (ID)

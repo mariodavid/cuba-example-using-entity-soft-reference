@@ -18,9 +18,22 @@ public class Document extends StandardEntity {
     @Convert(converter = EntitySoftReferenceConverter.class)
     protected com.haulmont.cuba.core.entity.Entity refersTo;
 
+    @MetaProperty(datatype = "Documentable")
+    @Column(name = "DOCUMENTS")
+    @Convert(converter = DocumentableConverter.class)
+    protected Documentable documents;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FILE_ID")
     protected FileDescriptor file;
+
+    public Documentable getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(Documentable documents) {
+        this.documents = documents;
+    }
 
     public FileDescriptor getFile() {
         return file;
@@ -37,6 +50,7 @@ public class Document extends StandardEntity {
     public void setRefersTo(com.haulmont.cuba.core.entity.Entity refersTo) {
         this.refersTo = refersTo;
     }
+
 
     public String getName() {
         return name;

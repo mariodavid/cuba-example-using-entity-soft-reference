@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <metadata xmlns="http://schemas.haulmont.com/cuba/metadata.xsd">
 
+
+    <datatypes>
+        <datatype
+                id="Documentable"
+                class="de.diedavids.cuba.ceuesr.entity.DocumentableDatatype"
+                javaType="de.diedavids.cuba.ceuesr.entity.Documentable"
+                sqlType="varchar(255)"
+        />
+    </datatypes>
     <metadata-model root-package="de.diedavids.cuba.ceuesr" namespace="ceuesr"/>
 
 </metadata>
