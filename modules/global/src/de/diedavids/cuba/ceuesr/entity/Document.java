@@ -18,6 +18,7 @@ public class Document extends StandardEntity {
     @Convert(converter = EntitySoftReferenceConverter.class)
     protected com.haulmont.cuba.core.entity.Entity refersTo;
 
+    @Basic
     @MetaProperty(datatype = "Documentable")
     @Column(name = "DOCUMENTS")
     @Convert(converter = DocumentableConverter.class)
