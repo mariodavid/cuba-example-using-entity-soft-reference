@@ -22,35 +22,35 @@ import javax.inject.Named;
 public class CommentEdit extends StandardEditor<Comment> {
 
 
-    @Inject
-    protected InstanceContainer<Comment> commentDc;
-
-    @Inject
-    protected PickerField<Commentable> commentsField;
-
-
-    @Subscribe
-    protected void onInit(InitEvent event) {
-
-        commentsField.addValueChangeListener(valueChangeEvent -> {
-            Commentable value = valueChangeEvent.getValue();
-            commentDc.getItem().setComments(value);
-        });
-    }
-
-    @Subscribe
-    protected void onAfterShow(AfterShowEvent event) {
-        Commentable comments = commentDc.getItem().getComments();
-
-        if (comments != null) {
-            /*
-            set meta class of the field to the target meta class
-             */
-            commentsField.setMetaClass(comments.getMetaClass());
-            commentsField.setValue(comments);
-        }
-
-    }
+//    @Inject
+//    protected InstanceContainer<Comment> commentDc;
+//
+//    @Inject
+//    protected PickerField<Commentable> commentsField;
+//
+//
+//    @Subscribe
+//    protected void onInit(InitEvent event) {
+//
+//        commentsField.addValueChangeListener(valueChangeEvent -> {
+//            Commentable value = valueChangeEvent.getValue();
+//            commentDc.getItem().setComments(value);
+//        });
+//    }
+//
+//    @Subscribe
+//    protected void onAfterShow(AfterShowEvent event) {
+//        Commentable comments = commentDc.getItem().getComments();
+//
+//        if (comments != null) {
+//            /*
+//            set meta class of the field to the target meta class
+//             */
+//            commentsField.setMetaClass(comments.getMetaClass());
+//            commentsField.setValue(comments);
+//        }
+//
+//    }
     
 
 }
