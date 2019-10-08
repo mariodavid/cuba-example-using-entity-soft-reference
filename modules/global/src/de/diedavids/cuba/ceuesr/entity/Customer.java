@@ -11,7 +11,7 @@ import java.util.UUID;
 @NamePattern("%s|name")
 @Table(name = "CEUESR_CUSTOMER")
 @Entity(name = "ceuesr_Customer")
-public class Customer extends StandardEntity implements Documentable<UUID> {
+public class Customer extends StandardEntity {
 
     @Column(name = "NAME")
     protected String name;

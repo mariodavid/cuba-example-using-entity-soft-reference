@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <views xmlns="http://schemas.haulmont.com/cuba/view.xsd">
 
+    <view entity="ceuesr_Blogpost" name="blogpost-view" extends="_local">
+        <property name="writtenBy" view="_minimal"/>
+    </view>
 </views>

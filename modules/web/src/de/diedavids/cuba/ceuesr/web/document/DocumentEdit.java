@@ -8,7 +8,6 @@ import com.haulmont.cuba.gui.model.InstanceContainer;
 import com.haulmont.cuba.gui.screen.*;
 import de.diedavids.cuba.ceuesr.entity.Customer;
 import de.diedavids.cuba.ceuesr.entity.Document;
-import de.diedavids.cuba.ceuesr.entity.Documentable;
 import de.diedavids.cuba.ceuesr.entity.Order;
 import de.diedavids.cuba.entitysoftreference.web.SoftReferenceFormFieldGenerator;
 
@@ -43,7 +42,7 @@ public class DocumentEdit extends StandardEditor<Document> {
     protected void onAssignToCustomer(Action.ActionPerformedEvent event) {
         screenBuilders.lookup(Customer.class, this).withSelectHandler(customers -> {
             Customer customer = new LinkedList<>(customers).getFirst();
-            setSoftReferenceValue(customer, customer);
+            setSoftReferenceValue(customer);
         }).build().show();
     }
 
@@ -51,14 +50,12 @@ public class DocumentEdit extends StandardEditor<Document> {
     protected void onAssignToOrder(Action.ActionPerformedEvent event) {
         screenBuilders.lookup(Order.class, this).withSelectHandler(orders -> {
             Order order = new LinkedList<>(orders).getFirst();
-            setSoftReferenceValue(order, order);
+            setSoftReferenceValue(order);
         }).build().show();
     }
 
-    private void setSoftReferenceValue(Entity softReferenceValue, Documentable documentable) {
+    private void setSoftReferenceValue(Entity softReferenceValue) {
         documentDc.getItem().setRefersTo(softReferenceValue);
-        documentDc.getItem().setDocuments(documentable);
-
     }
     
     

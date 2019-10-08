@@ -8,4 +8,6 @@
     
     <gui:screens base-packages="de.diedavids.cuba.ceuesr.web"/>
 
+    <gui:actions base-packages="de.diedavids.cuba.ceuesr.web"/>
+
 </beans>
