@@ -2,7 +2,8 @@ package de.diedavids.cuba.ceuesr.web.document;
 
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.gui.ScreenBuilders;
-import com.haulmont.cuba.gui.components.*;
+import com.haulmont.cuba.gui.components.Action;
+import com.haulmont.cuba.gui.components.Form;
 import com.haulmont.cuba.gui.model.InstanceContainer;
 import com.haulmont.cuba.gui.screen.*;
 import de.diedavids.cuba.ceuesr.entity.Customer;

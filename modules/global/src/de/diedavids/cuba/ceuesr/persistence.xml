@@ -5,5 +5,7 @@
         <class>de.diedavids.cuba.ceuesr.entity.Customer</class>
         <class>de.diedavids.cuba.ceuesr.entity.Order</class>
         <class>de.diedavids.cuba.ceuesr.entity.Document</class>
+        <class>de.diedavids.cuba.ceuesr.entity.Blogpost</class>
+        <class>de.diedavids.cuba.ceuesr.entity.Comment</class>
     </persistence-unit>
 </persistence>

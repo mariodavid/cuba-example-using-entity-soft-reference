@@ -4,5 +4,7 @@
         <item screen="ceuesr_Order.browse"/>
         <item screen="ceuesr_Customer.browse"/>
         <item screen="ceuesr_Document.browse"/>
+        <item screen="ceuesr_Comment.browse"/>
+        <item screen="ceuesr_Blogpost.browse"/>
     </menu>
 </menu-config>

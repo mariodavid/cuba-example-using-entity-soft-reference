@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        caption="msg://browseCaption"
+        focusComponent="blogpostsTable"
+        messagesPack="de.diedavids.cuba.ceuesr.web.blogpost">
+    <data readOnly="true">
+        <collection id="blogpostsDc"
+                    class="de.diedavids.cuba.ceuesr.entity.Blogpost"
+                    view="blogpost-view">
+            <loader id="blogpostsDl">
+                <query>
+                    <![CDATA[select e from ceuesr_Blogpost e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="blogpostsTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="blogpostsTable"
+                dataLoader="blogpostsDl">
+            <properties include=".*"/>
+        </filter>
+        <groupTable id="blogpostsTable"
+                    width="100%"
+                    dataContainer="blogpostsDc">
+            <actions>
+                <action id="create" type="create"/>
+                <action id="edit" type="edit"/>
+                <action id="remove" type="remove"/>
+            </actions>
+            <columns>
+                <column id="title"/>
+                <column id="writtenBy"/>
+                <column id="text"/>
+            </columns>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn" action="blogpostsTable.create"/>
+                <button id="editBtn" action="blogpostsTable.edit"/>
+                <button id="removeBtn" action="blogpostsTable.remove"/>
+            </buttonsPanel>
+        </groupTable>
+        <hbox id="lookupActions" spacing="true" visible="false">
+            <button action="lookupSelectAction"/>
+            <button action="lookupCancelAction"/>
+        </hbox>
+    </layout>
+</window>

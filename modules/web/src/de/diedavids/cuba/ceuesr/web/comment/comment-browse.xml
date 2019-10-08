@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        caption="msg://browseCaption"
+        focusComponent="commentsTable"
+        messagesPack="de.diedavids.cuba.ceuesr.web.comment">
+    <data readOnly="true">
+        <collection id="commentsDc"
+                    class="de.diedavids.cuba.ceuesr.entity.Comment"
+                    view="_local">
+            <loader id="commentsDl">
+                <query>
+                    <![CDATA[select e from ceuesr_Comment e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="commentsTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="commentsTable"
+                dataLoader="commentsDl">
+            <properties include=".*"/>
+        </filter>
+        <groupTable id="commentsTable"
+                    width="100%"
+                    dataContainer="commentsDc">
+            <actions>
+                <action id="create" type="create"/>
+                <action id="edit" type="edit"/>
+                <action id="remove" type="remove"/>
+            </actions>
+            <columns>
+                <column id="text"/>
+                <column id="username"/>
+            </columns>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn" action="commentsTable.create"/>
+                <button id="editBtn" action="commentsTable.edit"/>
+                <button id="removeBtn" action="commentsTable.remove"/>
+            </buttonsPanel>
+        </groupTable>
+        <hbox id="lookupActions" spacing="true" visible="false">
+            <button action="lookupSelectAction"/>
+            <button action="lookupCancelAction"/>
+        </hbox>
+    </layout>
+</window>
