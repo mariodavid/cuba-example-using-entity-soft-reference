@@ -20,11 +20,10 @@
 
                 <!--
 
-                the picker field does not use automatic binding in this case (by setting the property value),
-                instead the binding is done manually through the controller.
+                value source is used here
                 -->
                 <pickerField id="commentsField"
-                             caption="msg://comments"
+                             property="comments"
                 >
                     <actions>
                         <action id="lookup" type="entitySoftReferencePicker_lookup"/>

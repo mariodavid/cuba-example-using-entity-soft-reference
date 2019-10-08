@@ -83,14 +83,32 @@ public class EntitySoftReferenceLookupAction extends LookupAction {
 
                             MetaClass metaClass = metadata.getClass(entityClassValue);
 
-                            /*
-                            the meta class is fetched from dialog and passed into the picker field. Afterwards the super method is called,
-                            which in case the meta class is set will not treat it as a regular lookup with valueSource
-                             */
-                            pickerField.setMetaClass(metaClass);
+                            screenBuilders.lookup(metaClass.getJavaClass(), pickerField.getFrame().getFrameOwner())
+                                    .withOpenMode(OpenMode.DIALOG)
+                                    .withSelectHandler(selectedEntities -> {
 
-                            super.actionPerform(component);
+                                        /*
+                                        within this call there is a java type check in the method:
 
+                                        WebPickerField#checkValueType which causes problems with this code:
+                                        --------
+                                        MetaProperty metaProperty = ((EntityValueSource) valueSource).getMetaPropertyPath().getMetaProperty();
+                                        return metaProperty.getRange().asClass();
+                                        --------
+
+                                        the asClass() method throws an exception:
+
+                                        java.lang.IllegalStateException: Range is datatype
+                                            at com.haulmont.chile.core.model.impl.DatatypeRange.asClass(DatatypeRange.java:35)
+                                            at com.haulmont.cuba.web.gui.components.WebPickerField.getMetaClass(WebPickerField.java:173)
+                                            at com.haulmont.cuba.web.gui.components.WebPickerField.checkValueType(WebPickerField.java:119)
+                                            at com.haulmont.cuba.web.gui.components.WebPickerField.setValue(WebPickerField.java:97)
+                                            at com.haulmont.cuba.web.gui.components.WebPickerField.setValue(WebPickerField.java:59)
+                                         */
+
+                                        pickerField.setValue(selectedEntities.iterator().next());
+                                    })
+                                    .show();
                         }
                     })
                     .show();
