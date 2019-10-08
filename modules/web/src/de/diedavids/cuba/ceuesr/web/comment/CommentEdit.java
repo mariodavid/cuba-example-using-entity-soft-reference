@@ -24,22 +24,16 @@ public class CommentEdit extends StandardEditor<Comment> {
 
     @Inject
     protected InstanceContainer<Comment> commentDc;
-    @Inject
-    protected PickerField<Commentable> commentsField;
-    @Inject
-    protected Metadata metadata;
-    @Inject
-    private Form form;
 
     @Inject
-    protected Notifications notifications;
+    protected PickerField<Commentable> commentsField;
+
 
     @Subscribe
     protected void onInit(InitEvent event) {
-//        initSoftReferenceFormField(form, commentDc, "comments");
 
-        commentsField.addValueChangeListener(commentableValueChangeEvent -> {
-            Commentable value = commentableValueChangeEvent.getValue();
+        commentsField.addValueChangeListener(valueChangeEvent -> {
+            Commentable value = valueChangeEvent.getValue();
             commentDc.getItem().setComments(value);
         });
     }
@@ -49,56 +43,14 @@ public class CommentEdit extends StandardEditor<Comment> {
         Commentable comments = commentDc.getItem().getComments();
 
         if (comments != null) {
+            /*
+            set meta class of the field to the target meta class
+             */
             commentsField.setMetaClass(comments.getMetaClass());
             commentsField.setValue(comments);
         }
 
     }
     
-    
 
-    private void showMessage(String value) {
-        notifications.create(Notifications.NotificationType.TRAY)
-    .withCaption(value)
-                .show();
-    }
-
-
-    @Inject
-    protected UiComponentsGenerator uiComponentsGenerator;
-
-    @Inject
-    protected Messages messages;
-
-
-    /**
-     * initialized the soft reference as a form field
-     * @param form the destination form component instance
-     * @param container the instance container
-     * @param property the soft reference property
-     */
-    public void initSoftReferenceFormField(Form form, InstanceContainer container, String property) {
-
-        Field field = generateSoftReferenceField(property, container);
-
-        setCaption(property, container, field);
-        setValueSource(property, container, field);
-
-        form.add(field);
-
-
-    }
-
-    private void setValueSource(String property, InstanceContainer container, Field field) {
-        field.setValueSource(new ContainerValueSource<>(container, property));
-    }
-
-    private void setCaption(String property, InstanceContainer container, Field field) {
-        String propertyCaption = messages.getTools().getPropertyCaption(container.getEntityMetaClass(), property);
-        field.setCaption(propertyCaption);
-    }
-
-    private Field generateSoftReferenceField(String property, InstanceContainer container) {
-        return (Field) uiComponentsGenerator.generate(new ComponentGenerationContext(container.getEntityMetaClass(), property));
-    }
 }

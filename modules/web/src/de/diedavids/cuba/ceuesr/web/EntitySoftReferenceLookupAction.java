@@ -20,7 +20,6 @@ import com.haulmont.chile.core.model.MetaClass;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.gui.Dialogs;
-import com.haulmont.cuba.gui.Notifications;
 import com.haulmont.cuba.gui.UiComponents;
 import com.haulmont.cuba.gui.actions.picker.LookupAction;
 import com.haulmont.cuba.gui.app.core.inputdialog.InputDialog;
@@ -28,9 +27,7 @@ import com.haulmont.cuba.gui.app.core.inputdialog.InputParameter;
 import com.haulmont.cuba.gui.components.ActionType;
 import com.haulmont.cuba.gui.components.Component;
 import com.haulmont.cuba.gui.components.LookupField;
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSource;
 import com.haulmont.cuba.gui.screen.*;
-import com.haulmont.cuba.web.controllers.ControllerUtils;
 import de.diedavids.cuba.ceuesr.entity.Commentable;
 import de.diedavids.cuba.ceuesr.web.comment.MetadataSelector;
 
@@ -43,6 +40,8 @@ public class EntitySoftReferenceLookupAction extends LookupAction {
 
     public static final String ID = "entitySoftReferencePicker_lookup";
 
+    private final String ENTITY_CLASS_PARAMETER_ID = "entityClass";
+
     @Inject
     protected UiComponents uiComponents;
 
@@ -51,7 +50,6 @@ public class EntitySoftReferenceLookupAction extends LookupAction {
 
     @Inject
     private Metadata metadata;
-
 
 
     public EntitySoftReferenceLookupAction() {
@@ -68,56 +66,30 @@ public class EntitySoftReferenceLookupAction extends LookupAction {
     public void actionPerform(Component component) {
 
 
-
         // if standard behaviour
         if (!hasSubscriptions(ActionPerformedEvent.class)) {
-            FrameOwner frameOwner = pickerField.getFrame().getFrameOwner();
 
-            ScreenContext screenContext = UiControllerUtils.getScreenContext(pickerField.getFrame().getFrameOwner());
-            Dialogs dialogs = screenContext
-                    .getDialogs();
 
-            Class<Commentable> entityClass = Commentable.class;
+            Class entityClass = Commentable.class;
+            Dialogs.InputDialogBuilder inputDialog = inputDialog();
 
-//            pickerField.addValueChangeListener(valueChangeEvent -> {
-//                Object value = pickerField.getValue();
-//                screenContext.getNotifications().create(Notifications.NotificationType.TRAY)
-//                        .withCaption("Hello " + value)
-//                        .show();
-//
-//
-//            });
-//
-//            pickerField.setValueSource();
-
-            dialogs.createInputDialog(frameOwner)
-                    .withParameter(
-                            InputParameter.parameter("entityClass")
-                                    .withField(() -> {
-                                        LookupField field = uiComponents.create(LookupField.class);
-
-                                        field.setOptionsMap(getEntityClasses(entityClass));
-                                        field.setWidthFull();
-                                        field.setCaption("Entity Class");
-                                        return field;
-                                    })
-                                    .withRequired(true)
-                    )
+            inputDialog
+                    .withParameter(entityClassParameterForInterface(entityClass))
                     .withCaption("Select Entity Class")
                     .withCloseListener(closeEvent -> {
-                        if (closeEvent.getCloseAction().equals(InputDialog.INPUT_DIALOG_OK_ACTION)) {
-                            String entityClassValue = closeEvent.getValue("entityClass");
+                        if (okWasClicked(closeEvent)) {
+
+                            String entityClassValue = closeEvent.getValue(ENTITY_CLASS_PARAMETER_ID);
 
                             MetaClass metaClass = metadata.getClass(entityClassValue);
-                            pickerField.setMetaClass(metaClass);
-//                            screenBuilders.lookup(metaClass.getJavaClass(), pickerField.getFrame().getFrameOwner())
-//                                             .withOpenMode(OpenMode.DIALOG)
-//                                             .withSelectHandler(selectedEntities -> {
-//                                                 pickerField.setValue(selectedEntities.iterator().next());
-//                                              })
-//                                             .show();
-                            super.actionPerform(component);
 
+                            /*
+                            the meta class is fetched from dialog and passed into the picker field. Afterwards the super method is called,
+                            which in case the meta class is set will not treat it as a regular lookup with valueSource
+                             */
+                            pickerField.setMetaClass(metaClass);
+
+                            super.actionPerform(component);
 
                         }
                     })
@@ -127,6 +99,32 @@ public class EntitySoftReferenceLookupAction extends LookupAction {
             // call action perform handlers from super, delegate execution
             super.actionPerform(component);
         }
+    }
+
+    private Dialogs.InputDialogBuilder inputDialog() {
+        FrameOwner frameOwner = pickerField.getFrame().getFrameOwner();
+
+        ScreenContext screenContext = UiControllerUtils.getScreenContext(pickerField.getFrame().getFrameOwner());
+
+        return screenContext
+                .getDialogs().createInputDialog(frameOwner);
+    }
+
+    private boolean okWasClicked(InputDialog.InputDialogCloseEvent closeEvent) {
+        return closeEvent.getCloseAction().equals(InputDialog.INPUT_DIALOG_OK_ACTION);
+    }
+
+    private InputParameter entityClassParameterForInterface(Class<? extends Entity> entityClass) {
+        return InputParameter.parameter(ENTITY_CLASS_PARAMETER_ID)
+                .withField(() -> {
+                    LookupField field = uiComponents.create(LookupField.class);
+
+                    field.setOptionsMap(getEntityClasses(entityClass));
+                    field.setWidthFull();
+                    field.setCaption("Entity Class");
+                    return field;
+                })
+                .withRequired(true);
     }
 
     private Map<String, Object> getEntityClasses(Class<? extends Entity> entityClass) {
