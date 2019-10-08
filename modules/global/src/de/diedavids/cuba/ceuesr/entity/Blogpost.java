@@ -5,11 +5,12 @@ import com.haulmont.cuba.core.entity.StandardEntity;
 import com.haulmont.cuba.security.entity.User;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @NamePattern("%s|title")
 @Table(name = "CEUESR_BLOGPOST")
 @Entity(name = "ceuesr_Blogpost")
-public class Blogpost extends StandardEntity {
+public class Blogpost extends StandardEntity implements Commentable<UUID> {
     private static final long serialVersionUID = 8588926903533626069L;
 
     @Column(name = "TITLE")

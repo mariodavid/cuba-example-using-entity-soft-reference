@@ -1,6 +1,8 @@
 package de.diedavids.cuba.ceuesr.web.comment;
 
 import com.haulmont.cuba.core.global.Messages;
+import com.haulmont.cuba.core.global.Metadata;
+import com.haulmont.cuba.gui.Notifications;
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.gui.components.data.value.ContainerValueSource;
 import com.haulmont.cuba.gui.model.InstanceContainer;
@@ -25,12 +27,40 @@ public class CommentEdit extends StandardEditor<Comment> {
     @Inject
     protected PickerField<Commentable> commentsField;
     @Inject
+    protected Metadata metadata;
+    @Inject
     private Form form;
 
+    @Inject
+    protected Notifications notifications;
 
     @Subscribe
     protected void onInit(InitEvent event) {
-        initSoftReferenceFormField(form, commentDc, "comments");
+//        initSoftReferenceFormField(form, commentDc, "comments");
+
+        commentsField.addValueChangeListener(commentableValueChangeEvent -> {
+            Commentable value = commentableValueChangeEvent.getValue();
+            commentDc.getItem().setComments(value);
+        });
+    }
+
+    @Subscribe
+    protected void onAfterShow(AfterShowEvent event) {
+        Commentable comments = commentDc.getItem().getComments();
+
+        if (comments != null) {
+            commentsField.setMetaClass(comments.getMetaClass());
+            commentsField.setValue(comments);
+        }
+
+    }
+    
+    
+
+    private void showMessage(String value) {
+        notifications.create(Notifications.NotificationType.TRAY)
+    .withCaption(value)
+                .show();
     }
 
 

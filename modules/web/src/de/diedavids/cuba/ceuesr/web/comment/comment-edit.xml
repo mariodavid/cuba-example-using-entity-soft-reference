@@ -17,7 +17,7 @@
             <column width="250px">
                 <textField id="textField" property="text"/>
                 <textField id="usernameField" property="username"/>
-                <pickerField id="commentsField" property="comments">
+                <pickerField id="commentsField" caption="msg://comments">
                     <actions>
                         <action id="lookup" type="entitySoftReferencePicker_lookup"/>
                         <action id="clear" type="picker_clear"/>

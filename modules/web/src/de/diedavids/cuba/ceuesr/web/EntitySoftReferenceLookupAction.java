@@ -17,31 +17,41 @@
 package de.diedavids.cuba.ceuesr.web;
 
 import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.DevelopmentException;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.ScreenBuilders;
+import com.haulmont.cuba.core.entity.Entity;
+import com.haulmont.cuba.core.global.Metadata;
+import com.haulmont.cuba.gui.Dialogs;
+import com.haulmont.cuba.gui.Notifications;
+import com.haulmont.cuba.gui.UiComponents;
 import com.haulmont.cuba.gui.actions.picker.LookupAction;
+import com.haulmont.cuba.gui.app.core.inputdialog.InputDialog;
+import com.haulmont.cuba.gui.app.core.inputdialog.InputParameter;
 import com.haulmont.cuba.gui.components.ActionType;
 import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.PickerField;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import de.diedavids.cuba.ceuesr.entity.Blogpost;
-import org.springframework.beans.factory.InitializingBean;
+import com.haulmont.cuba.gui.components.LookupField;
+import com.haulmont.cuba.gui.components.data.value.ContainerValueSource;
+import com.haulmont.cuba.gui.screen.*;
+import com.haulmont.cuba.web.controllers.ControllerUtils;
+import de.diedavids.cuba.ceuesr.entity.Commentable;
+import de.diedavids.cuba.ceuesr.web.comment.MetadataSelector;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 @ActionType(EntitySoftReferenceLookupAction.ID)
 public class EntitySoftReferenceLookupAction extends LookupAction {
 
 
     public static final String ID = "entitySoftReferencePicker_lookup";
+
+    @Inject
+    protected UiComponents uiComponents;
+
+    @Inject
+    protected MetadataSelector metadataSelector;
+
+    @Inject
+    private Metadata metadata;
+
 
 
     public EntitySoftReferenceLookupAction() {
@@ -63,28 +73,64 @@ public class EntitySoftReferenceLookupAction extends LookupAction {
         if (!hasSubscriptions(ActionPerformedEvent.class)) {
             FrameOwner frameOwner = pickerField.getFrame().getFrameOwner();
 
+            ScreenContext screenContext = UiControllerUtils.getScreenContext(pickerField.getFrame().getFrameOwner());
+            Dialogs dialogs = screenContext
+                    .getDialogs();
 
-            screenBuilders.screen(frameOwner)
-                    .withScreenClass(EntitySoftReferenceInterfaceSelection.class)
-                    .withOpenMode(OpenMode.DIALOG)
-                    .withAfterCloseListener(entitySoftReferenceInterfaceSelectionAfterScreenCloseEvent -> {
-                        String selectedEntityClass = entitySoftReferenceInterfaceSelectionAfterScreenCloseEvent.getScreen().getSelectedEntityClass();
+            Class<Commentable> entityClass = Commentable.class;
 
-                        System.out.println(selectedEntityClass);
+//            pickerField.addValueChangeListener(valueChangeEvent -> {
+//                Object value = pickerField.getValue();
+//                screenContext.getNotifications().create(Notifications.NotificationType.TRAY)
+//                        .withCaption("Hello " + value)
+//                        .show();
+//
+//
+//            });
+//
+//            pickerField.setValueSource();
+
+            dialogs.createInputDialog(frameOwner)
+                    .withParameter(
+                            InputParameter.parameter("entityClass")
+                                    .withField(() -> {
+                                        LookupField field = uiComponents.create(LookupField.class);
+
+                                        field.setOptionsMap(getEntityClasses(entityClass));
+                                        field.setWidthFull();
+                                        field.setCaption("Entity Class");
+                                        return field;
+                                    })
+                                    .withRequired(true)
+                    )
+                    .withCaption("Select Entity Class")
+                    .withCloseListener(closeEvent -> {
+                        if (closeEvent.getCloseAction().equals(InputDialog.INPUT_DIALOG_OK_ACTION)) {
+                            String entityClassValue = closeEvent.getValue("entityClass");
+
+                            MetaClass metaClass = metadata.getClass(entityClassValue);
+                            pickerField.setMetaClass(metaClass);
+//                            screenBuilders.lookup(metaClass.getJavaClass(), pickerField.getFrame().getFrameOwner())
+//                                             .withOpenMode(OpenMode.DIALOG)
+//                                             .withSelectHandler(selectedEntities -> {
+//                                                 pickerField.setValue(selectedEntities.iterator().next());
+//                                              })
+//                                             .show();
+                            super.actionPerform(component);
+
+
+                        }
                     })
                     .show();
 
-
-
-            Screen lookupScreen = screenBuilders.lookup(Blogpost.class, frameOwner)
-                    .withSelectHandler(blogposts -> {
-                        System.out.println(blogposts);
-                    })
-                    .build();
-            lookupScreen.show();
         } else {
             // call action perform handlers from super, delegate execution
             super.actionPerform(component);
         }
     }
+
+    private Map<String, Object> getEntityClasses(Class<? extends Entity> entityClass) {
+        return metadataSelector.getEntitiesLookupFieldOptions(entityClass);
+    }
+
 }

@@ -30,12 +30,10 @@
                 <action id="create" type="create"/>
                 <action id="edit" type="edit"/>
                 <action id="remove" type="remove"/>
-                <action id="selectEntity" caption="Select Entity"/>
             </actions>
             <columns>
                 <column id="text"/>
                 <column id="username"/>
-                <column id="comments"/>
             </columns>
             <rowsCount/>
             <buttonsPanel id="buttonsPanel"
@@ -43,7 +41,6 @@
                 <button id="createBtn" action="commentsTable.create"/>
                 <button id="editBtn" action="commentsTable.edit"/>
                 <button id="removeBtn" action="commentsTable.remove"/>
-                <button id="selectEntityBtn" action="commentsTable.selectEntity"/>
             </buttonsPanel>
         </groupTable>
         <hbox id="lookupActions" spacing="true" visible="false">
